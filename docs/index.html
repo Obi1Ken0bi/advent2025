@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advent of Code 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>ADVENT // 2025</h1>
+        <h2>Kotlin Solutions & Algorithmic Visualizations</h2>
+    </header>
+
+    <main>
+        <div id="calendar" class="calendar-grid">
+            <!-- JS Generated -->
+        </div>
+    </main>
+
+    <footer>
+        <p>SYSTEM STATUS: OPTIMAL // CREATED BY ANTIGRAVITY</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        const calendar = document.getElementById('calendar');
+
+        // Define Day Titles (mock)
+        const dayTitles = {
+            1: "Secret Entrance",
+            2: "Gift Shop",
+        };
+
+        for (let i = 1; i <= 25; i++) {
+            const dayCard = document.createElement('div');
+            dayCard.className = 'day-card glass glass-panel';
+
+            const dayNum = document.createElement('div');
+            dayNum.className = 'day-number';
+            dayNum.textContent = i.toString().padStart(2, '0');
+
+            const title = document.createElement('div');
+            title.className = 'day-title';
+            title.textContent = dayTitles[i] || `Protocol ${i}`;
+
+            const actions = document.createElement('div');
+            actions.className = 'day-actions';
+
+            const dayStr = i.toString().padStart(2, '0');
+
+            // Only enabled links for 1 and 2
+            if (i <= 2) {
+                const p1 = document.createElement('a');
+                p1.href = `day${dayStr}/index.html?part=1`;
+                p1.className = 'btn';
+                p1.textContent = 'Visualize';
+                actions.appendChild(p1);
+            } else {
+                const p1 = document.createElement('span');
+                p1.className = 'btn btn-secondary';
+                p1.style.opacity = '0.5';
+                p1.style.cursor = 'not-allowed';
+                p1.textContent = 'Locked';
+                actions.appendChild(p1);
+            }
+
+            dayCard.appendChild(dayNum);
+            dayCard.appendChild(title);
+            dayCard.appendChild(actions);
+            calendar.appendChild(dayCard);
+        }
+    </script>
+</body>
+
+</html>

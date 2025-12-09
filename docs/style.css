@@ -1,0 +1,285 @@
+/* Cyberpunk Christmas Theme */
+:root {
+    --bg-dark: #050505;
+    --bg-panel: rgba(20, 20, 25, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    --neon-red: #ff2a2a;
+    --neon-green: #0f6;
+    --neon-gold: #ffd700;
+    --hologram-blue: #00f3ff;
+
+    --text-main: #ffffff;
+    --text-dim: #8888aa;
+
+    --font-heading: 'Outfit', 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-heading);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 42, 42, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 102, 0.05) 0%, transparent 40%);
+    overflow-x: hidden;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel {
+    border-radius: 16px;
+    padding: 24px;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: 3.5rem;
+    background: linear-gradient(to right, var(--text-main), var(--text-dim));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--neon-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    margin-bottom: 2rem;
+}
+
+code,
+pre {
+    font-family: var(--font-mono);
+}
+
+/* Layout */
+header {
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+}
+
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Day Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.day-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.day-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.day-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+}
+
+.day-card:hover::before {
+    opacity: 1;
+}
+
+.day-number {
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    line-height: 1;
+}
+
+.day-title {
+    font-size: 1.25rem;
+    z-index: 1;
+    margin-top: auto;
+    margin-bottom: 1rem;
+}
+
+.day-actions {
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+}
+
+.btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn:hover {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--text-main);
+    background: transparent;
+    color: var(--text-main);
+    box-shadow: none;
+}
+
+/* Visualization Layouts */
+.vis-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    /* Main viz + Sidebar */
+    gap: 24px;
+    min-height: 600px;
+}
+
+.vis-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.vis-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.panel-title {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.5rem;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+}
+
+.stat-label {
+    color: var(--text-dim);
+}
+
+.stat-value {
+    color: var(--hologram-blue);
+}
+
+.log-panel {
+    flex: 1;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    max-height: 300px;
+}
+
+.log-entry {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-entry.highlight {
+    color: var(--neon-gold);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* Code Highlight */
+.code-block {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.code-line {
+    display: block;
+    padding: 0 4px;
+}
+
+.code-line.active {
+    background: rgba(0, 243, 255, 0.2);
+    border-left: 2px solid var(--hologram-blue);
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-top: 4rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

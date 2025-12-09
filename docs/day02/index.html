@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 02 // Gift Shop</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .conveyor-container {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scanner-beam {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: var(--neon-red);
+            box-shadow: 0 0 20px var(--neon-red), 0 0 40px var(--neon-red);
+            z-index: 10;
+        }
+
+        .packet {
+            width: 120px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--hologram-blue);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            color: var(--hologram-blue);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+            position: absolute;
+            /* Controlled by JS */
+        }
+
+        .packet.valid {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
+        }
+
+        .packet.invalid {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            opacity: 0.5;
+        }
+
+        .split-display {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            height: 3rem;
+        }
+
+        .part {
+            padding: 5px 10px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .part.active {
+            border-bottom-color: var(--neon-gold);
+        }
+
+        .part.match {
+            color: var(--neon-green);
+            border-bottom-color: var(--neon-green);
+        }
+
+        .part.no-match {
+            color: var(--neon-red);
+            border-bottom-color: var(--neon-red);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>DAY 02 // GIFT SHOP</h1>
+        <h2><a href="../index.html" class="btn btn-secondary">← CONNECTION TERMINATED</a></h2>
+    </header>
+
+    <main>
+        <div class="vis-container">
+            <div class="vis-main glass glass-panel">
+                <div class="conveyor-container">
+                    <div class="scanner-beam"></div>
+                    <div id="packetDisplay"></div>
+                </div>
+
+                <div class="split-display" id="splitDisplay">
+                    <!-- JS Injected -->
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center; justify-content: center;">
+                    <button id="btnPrev" class="btn btn-secondary">PREV</button>
+                    <button id="btnPlay" class="btn">INITIALIZE / PAUSE</button>
+                    <button id="btnNext" class="btn btn-secondary">NEXT</button>
+                </div>
+                <div
+                    style="margin-top: 1rem; display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center;">
+                    <span style="color: var(--text-dim); font-size: 0.8rem;">SLOW</span>
+                    <input type="range" id="speedSlider" min="1" max="100" value="50"
+                        style="width: 200px; accent-color: var(--neon-gold);">
+                    <span style="color: var(--text-dim); font-size: 0.8rem;">FAST</span>
+                </div>
+            </div>
+
+            <div class="vis-sidebar glass glass-panel">
+                <div>
+                    <div class="panel-title">Algorithm Logic</div>
+                    <div class="code-block">
+                        <span id="line-1" class="code-line">fun isValid(s: String): Boolean {</span>
+                        <span id="line-2" class="code-line"> if (s.length % 2 != 0) return false</span>
+                        <span id="line-3" class="code-line"> val mid = s.length / 2</span>
+                        <span id="line-4" class="code-line"> val p1 = s.take(mid)</span>
+                        <span id="line-5" class="code-line"> val p2 = s.takeLast(mid)</span>
+                        <span id="line-6" class="code-line"> return p1 == p2</span>
+                        <span id="line-7" class="code-line">}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="panel-title">System State</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Current:</span>
+                        <span class="stat-value" id="statCur">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Length:</span>
+                        <span class="stat-value" id="statLen">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Valid:</span>
+                        <span class="stat-value" id="statValid">0</span>
+                    </div>
+                </div>
+
+                <div style="display:flex; flex-direction: column; flex: 1;">
+                    <div class="panel-title">Operation Log</div>
+                    <div id="logPanel" class="log-panel"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass glass-panel" style="margin-top: 24px;">
+            <div class="panel-title">Range Input</div>
+            <textarea id="input"
+                style="width: 100%; background: transparent; border: none; color: var(--text-dim); font-family: var(--font-mono); height: 60px;">1212, 1234, 1010, 5555, 123123</textarea>
+        </div>
+    </main>
+
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
